@@ -1,9 +1,10 @@
 class Calculator {
-  constructor(previousOperand_TextElement, currentOperand_TextElement) {
-    this.previousOperand_TextElement = previousOperand_TextElement;
-    this.currentOperand_TextElement = currentOperand_TextElement;
-    this.clear;
+  constructor(previousOperandTextElement, currentOperandTextElement) {
+    this.previousOperandTextElement = previousOperandTextElement;
+    this.currentOperandTextElement = currentOperandTextElement;
+    this.clear();
   }
+
   clear() {
     this.currentOperand = '';
     this.previousOperand = '';
@@ -12,40 +13,66 @@ class Calculator {
 
   delete() {}
 
+  //TODO EXPLAIN THIS HOMIE
+  //* This is pretty musch appedning a number and converting it to strin g
   appendNumber(number) {
-    this.currentOperand = number;
+    this.currentOperand = this.currentOperand.toString() + number.toString();
   }
 
-  chooseOperation(operation) {}
+  chooseOperation(operation) {
+    this.operation = operation;
+    this.previousOperand = this.currentOperand;
+    this.currentOperand = '';
+  }
 
-  computer() {}
+  compute() {}
+
+  getDisplayNumber(number) {
+    const stringNumber = number.toString();
+    const integerDigits = parseFloat(stringNumber.split('.')[0]);
+    const decimalDigits = stringNumber.split('.')[1];
+    let integerDisplay;
+    if (isNaN(integerDigits)) {
+      integerDisplay = '';
+    } else {
+      integerDisplay = integerDigits.toLocaleString('en', {
+        maximumFractionDigits: 0
+      });
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`;
+    } else {
+      return integerDisplay;
+    }
+  }
 
   updateDisplay() {
-    this.currentOperand_TextElement.innerText = this.currentOperand;
+    this.currentOperandTextElement.innerText = this.currentOperand;
+
+    this.previousOperandTextElement.innerText = this.previousOperand;
   }
 }
 
-const numberButtons = document.querySelectorAll(['data-number']);
-const operationsButtons = document.querySelectorAll('[data-operation]');
+const numberButtons = document.querySelectorAll('[data-number]');
+const operationButtons = document.querySelectorAll('[data-operation]');
 const equalsButton = document.querySelector('[data-equals]');
 const deleteButton = document.querySelector('[data-delete]');
 const allClearButton = document.querySelector('[data-all-clear]');
-const previousOperand_TextElement = document.querySelector(
+const previousOperandTextElement = document.querySelector(
   '[data-previous-operand]'
 );
-const currentOperand_TextElement = document.querySelector(
+const currentOperandTextElement = document.querySelector(
   '[data-current-operand]'
 );
 
 const calculator = new Calculator(
-  previousOperand_TextElement,
-  currentOperand_TextElement
+  previousOperandTextElement,
+  currentOperandTextElement
 );
 
 numberButtons.forEach(button => {
   button.addEventListener('click', () => {
     calculator.appendNumber(button.innerText);
-    calculator.updateDisplay;
+    calculator.updateDisplay();
   });
 });
-//https://www.youtube.com/watch?v=j59qQ7YWLxw&list=WL&index=3&t=369s
